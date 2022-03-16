@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <h1 class="h1">넌센스 Quiz 맞추기</h1>
+    <p class="h1">3문제 중복있음</p>
+    <p><span id="day">0</span>초</p>
+    <h3><a href="" id="start">시작</a></h3>
+    <h3 id="quiz"></h3>
+    <form id="input_form" style="display: none;">
+        <input type="text">
+    </form>
+    <p id="score"></p>
+    
+</body>
+
+<script>
+    let count = 0;
+    let score = 0;
+    let randomnum = 0;
+    let day1 = 0;
+    let day2 = 0;
+    
+    const quizArray = [
+        {quiz : "하늘에 공이 두개 있으면?", answer : "스카이콩콩"},
+        {quiz : "오리가 얼면?", answer : "언덕"},
+        {quiz : "소나무가 삐지면?", answer : "칫솔"}
+    ];
+
+    function quizstart() {
+        randomnum = Math.floor(Math.random()*quizArray.length)
+        $("#quiz").text(quizArray[randomnum].quiz);
+    }
+
+    $("#start").on("click",function(e) {
+    e.preventDefault(); // 새로고침 방지
+    $("#input_form").slideDown();
+    $("#input_form").children().first().focus();
+    quizstart();
+    $("#score").text(`${quizArray.length}개 중에서 ${score}개 맞췄습니다.`);
+    $("#start").text("시작");
+    $("#day").text("0");
+    let day1 = new Date().getSeconds();
+    $("#quiz").show();
+});
+
+    $("#input_form").on("submit",function(e) {
+        e.preventDefault();
+        const answer = quizArray[randomnum].answer;
+        const user = $("#input_form").children().first().val();
+        count++;
+        if (user == answer) {
+            score++;
+            $("#score").text(`${quizArray.length}개 중에서 ${score}개 맞췄습니다.`);
+        }
+        quizstart();
+        $("#input_form").children().first().val("");
+        if (count == 3) {
+            $("#input_form").fadeOut();
+            $("#quiz").fadeOut();
+            count = 0;
+            score = 0;
+            $("#start").text("재시작");
+            let day2 = new Date().getSeconds();
+            $("#day").text(`${day2 - day1}`);
+        }
+    });
+
+
+</script>
+</html>
